@@ -16,7 +16,6 @@ use App\Models\Project;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/projects', [\App\Http\Controllers\ProjectController::class,'index']);
 
-Route::post('/projects', function() {
-    Project::create(request(['title','description']));
-});
+Route::post('/projects',[\App\Http\Controllers\ProjectController::class,'store']);
