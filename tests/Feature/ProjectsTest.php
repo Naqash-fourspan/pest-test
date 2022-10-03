@@ -2,7 +2,7 @@
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 uses(RefreshDatabase::class, WithFaker::class);
-it('example', function () {
+it('a user can create project', function () {
     $attributes = [
         'title'=> $this->faker->sentence,
         'description' => $this->faker->paragraph
