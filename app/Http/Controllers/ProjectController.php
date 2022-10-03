@@ -8,18 +8,25 @@ use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         $projects = Project::all();
 
         return view('projects.index', compact('projects'));
     }
 
-    public function store (ProjectStoreRequest $request) {
+    public function store(ProjectStoreRequest $request)
+    {
 
         Project::create([
             'title' => $request->title,
             'description' => $request->description]);
 
-        return redirect ('/projects');
+        return redirect('/projects');
+    }
+
+    public function show(Project $project)
+    {
+        return view('projects.show', compact('project'));
     }
 }

@@ -4,6 +4,7 @@ use App\Models\Project;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use function Pest\Laravel\post;
+use Tests\TestCase;
 
 uses(RefreshDatabase::class, WithFaker::class);
 
@@ -15,6 +16,14 @@ it('a user can create project', function () {
     post('/projects', $attributes)->assertRedirect('/projects');
     $this->assertDatabaseHas('projects', $attributes);
     $this->get('/projects')->assertSee($attributes['title']);
+});
+
+it('a user can view a project', function () {
+    $this->withoutExceptionHandling();
+   $project = Project::factory()->create();
+   $this->get($project->path())
+       ->assertSee($project->title)
+       ->assertSee($project->description);
 });
 
 it('a project requires a title', function () {
