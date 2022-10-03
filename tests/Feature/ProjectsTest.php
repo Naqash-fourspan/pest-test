@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Project;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use function Pest\Laravel\post;
@@ -17,9 +18,11 @@ it('a user can create project', function () {
 });
 
 it('a project requires a title', function () {
-    post('/projects', [])->assertSessionHasErrors('title');
+    $attributes = Project::factory()->raw(['title'=> '']);
+    post('/projects', [$attributes])->assertSessionHasErrors('title');
 });
 
 it('a project requires a description', function () {
-    post('/projects', [])->assertSessionHasErrors('description');
+    $attributes = Project::factory()->raw(['title'=> '']);
+    post('/projects', [$attributes])->assertSessionHasErrors('description');
 });
