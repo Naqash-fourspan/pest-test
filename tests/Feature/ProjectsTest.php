@@ -9,10 +9,10 @@ use function Pest\Laravel\post;
 uses(RefreshDatabase::class, WithFaker::class);
 
 
-test('only authenticated users can create project', function () {
+it('only authenticated users can create project', function () {
 
     $attributes = Project::factory()->raw();
-    $this->post('/projects', $attributes)->assertRedirect('login');
+    post('/projects', $attributes)->assertRedirect('login');
 });
 
 
