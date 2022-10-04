@@ -17,16 +17,17 @@ class ProjectController extends Controller
 
     public function store(ProjectStoreRequest $request)
     {
-
-        Project::create([
+        auth()->user()->projects()->create([
             'title' => $request->title,
-            'description' => $request->description]);
+            'description' => $request->description,
+        ]);
 
         return redirect('/projects');
     }
 
-    public function show(Project $project)
+    public function show(Request $request)
     {
+        $project = Project::findOrFail($request->id);
         return view('projects.show', compact('project'));
     }
 }

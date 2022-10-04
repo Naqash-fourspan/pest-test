@@ -1,7 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Models\Project;
+use App\Http\Controllers\ProjectController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,7 +17,15 @@ use App\Models\Project;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/projects', [\App\Http\Controllers\ProjectController::class,'index']);
-Route::get('/projects/{project}', [\App\Http\Controllers\ProjectController::class,'show']);
+Route::middleware('auth')->group(function (){
 
-Route::post('/projects',[\App\Http\Controllers\ProjectController::class,'store']);
+    Route::get('/projects', [ProjectController::class,'index']);
+    Route::post('/projects',[ProjectController::class,'store']);
+
+
+});
+Route::get('/project/{id}', [ProjectController::class,'show']);
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
