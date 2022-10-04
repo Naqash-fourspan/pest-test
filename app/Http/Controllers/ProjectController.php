@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProjectStoreRequest;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ProjectController extends Controller
 {
@@ -20,6 +21,7 @@ class ProjectController extends Controller
         auth()->user()->projects()->create([
             'title' => $request->title,
             'description' => $request->description,
+            'uuid' => (string) Str::orderedUuid(),
         ]);
 
         return redirect('/projects');

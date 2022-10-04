@@ -15,7 +15,8 @@ class CreateProjectRequest extends AbstractFormRequest
     {
         return [
             'title' => ['required', 'max:255'],
-            'description' => ['required', 'max:1000']
+            'description' => ['required', 'max:1000'],
+            'owner_id' => ['required']
         ];
     }
 }
