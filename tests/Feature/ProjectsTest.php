@@ -3,10 +3,9 @@
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use function Pest\Laravel\post;
 
-uses(RefreshDatabase::class, WithFaker::class);
+uses( WithFaker::class);
 
 
 it('only authenticated users can create project', function () {
