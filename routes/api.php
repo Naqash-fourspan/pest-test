@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Auth\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProjectController;
@@ -13,6 +14,8 @@ use App\Http\Controllers\Api\ProjectController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::post('/user/register', [AuthController::class, 'register'])->name('user.register');
+Route::post('/user/auth', [AuthController::class, 'login'])->name('user.login');
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
