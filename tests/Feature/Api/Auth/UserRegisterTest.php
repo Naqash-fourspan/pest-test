@@ -3,6 +3,7 @@
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Testing\Fluent\AssertableJson;
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\postJson;
 
@@ -27,3 +28,15 @@ it('registers a user and verified is null', function () {
     ]);
 });
 
+it('it validates require fields', function () {
+    postJson(route('user.register'), [])
+        ->assertStatus(422)
+        ->assertJson(function (AssertableJson $json) {
+            $json
+                ->has('errors.uuid')
+                ->has('errors.email')
+                ->has('errors.password')
+                ->has('errors.name')
+                ->etc();
+        });
+});
