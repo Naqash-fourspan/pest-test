@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
@@ -18,7 +19,7 @@ class AuthController extends Controller
     {
         $user = $userService->createUser($request->validated());
 
-        return response(['user' => $user], 201);
+        return response(['user' => $user], Response::HTTP_OK);
     }
     public function login(LoginRequest $request)
     {
