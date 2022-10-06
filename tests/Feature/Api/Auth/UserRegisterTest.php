@@ -27,14 +27,16 @@ it('registers a user and verified is null', function () {
         'email_verified_at' => null,
     ]);
 });
-
-it('it validates require fields', function () {
-    postJson(route('user.register'),[])
-        ->assertStatus(Response::HTTP_BAD_REQUEST)
-        ->assertJson(function (AssertableJson $json) {
-            $json
-                ->has('message')
-                ->etc();
-        });
+test('it validate password required', function () {
+    $newUser = User::factory()->raw(['password' => '']);
+    $response = $this->postJson(route('user.register'), $newUser);
+    $response->assertStatus(Response::HTTP_BAD_REQUEST)
+        ->assertJson(['message' => 'The password field is required.']);
 });
 
+test('it validate email required', function () {
+    $newUser = User::factory()->raw(['email' => '']);
+    $response = $this->postJson(route('user.register'), $newUser);
+    $response->assertStatus(Response::HTTP_BAD_REQUEST)
+        ->assertJson(['message' => 'The email field is required.']);
+});
