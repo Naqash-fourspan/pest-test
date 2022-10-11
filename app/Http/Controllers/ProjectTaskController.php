@@ -9,7 +9,9 @@ use Illuminate\Http\Request;
 use Illuminate\Auth\Access\AuthorizationException;
 class ProjectTaskController extends Controller
 {
-
+    /**
+     * @throws AuthorizationException
+     */
     public function store(AddTaskRequest $request)
     {
         $project = Project::findOrFail($request->project_id);
