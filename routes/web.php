@@ -26,8 +26,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
     Route::post('/project/{project_id}/tasks', [ProjectTaskController::class, 'store']);
-
+    Route::patch('/project/{project_id}/tasks/{task_id}', [ProjectTaskController::class, 'update']);
+    Route::patch('/project/{project_id}', [ProjectController::class, 'update']);
 });
+
 
 
 Auth::routes();

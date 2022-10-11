@@ -4,8 +4,9 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProjectStoreRequest extends FormRequest
+class UpdateProjectRequest extends FormRequest
 {
+
     public function authorize()
     {
         return true;
@@ -14,9 +15,7 @@ class ProjectStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required',
-            'description' => 'required',
-            'notes' => 'min:3'
+            'id' => 'required',
         ];
     }
 }

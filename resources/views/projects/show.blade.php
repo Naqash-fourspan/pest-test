@@ -8,6 +8,7 @@
 
     <li>{{$project->title}}</li>
     <li>{{$project->description}}</li>
+    <li>{{$project->notes}}</li>
 </ul>
 @foreach($project->tasks as $task)
     <div class="task">

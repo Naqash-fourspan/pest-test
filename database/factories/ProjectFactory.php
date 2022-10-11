@@ -13,11 +13,11 @@ class ProjectFactory extends Factory
     {
         return [
             'uuid' => (string) Str::orderedUuid(),
-            'title' => fake()->sentence(),
+            'title' => fake()->jobTitle(),
             'description' => fake()->paragraph(),
-            'owner_id' => function () {
-                return User::factory()->create()->id;
-            }
+            'notes' => 'General notes here.',
+            'owner_id' => User::factory()->create()
+
         ];
     }
 }

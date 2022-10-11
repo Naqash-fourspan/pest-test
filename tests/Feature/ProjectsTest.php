@@ -3,51 +3,57 @@
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Str;
 use function Pest\Laravel\post;
 
 uses( WithFaker::class);
 
-
-it('only authenticated users can create project', function () {
-
-    $attributes = Project::factory()->raw();
-    post('/projects', $attributes)->assertRedirect('login');
-});
-
-
-it('a user can create project', function () {
-    $this->withoutExceptionHandling();
-    $user = User::factory()->create();
-    $attributes = [
-        'title' => $this->faker->sentence,
-        'description' => $this->faker->paragraph
-    ];
-    $this->actingAs($user)
-        ->post('/projects', $attributes)
-        ->assertRedirect('/projects');
-    $this->assertDatabaseHas('projects', $attributes);
-    $this->get('/projects')->assertSee($attributes['title']);
-});
-
-it('a user can view a project', function () {
-    $user = User::factory()->create();
-    $this->withoutExceptionHandling();
+test('guest cannot manage projects', function () {
     $project = Project::factory()->create();
-    $this->actingAs($user)->get('/project/'.$project->id)
-        ->assertSee($project->title)
-        ->assertSee($project->description);
+    $this->get('/projects')->assertRedirect('login');
+    $this->get($project->path())->assertRedirect('login');
+    $this->post('/projects', $project->toArray())->assertRedirect('login');
 });
 
-it('a project requires a title', function () {
-    $user = User::factory()->create();
+test('a user can update their project', function () {
+    $this->withoutExceptionHandling();
+    login();
+    $project = Project::factory()->create(['owner_id' => auth()->id()]);
+    $this->patch($project->path(), [
+        'notes' => 'Changed'
+    ])->assertRedirect($project->path());
+
+    $this->assertDatabaseHas('projects', ['notes' => 'Changed']);
+});
+
+test('a user can view their project', function () {
+    $this->withoutExceptionHandling();
+    login();
+    $project = Project::factory()->create(['owner_id' => auth()->id()]);
+    $this->get('/project/' . $project->id)->assertSee($project->title)->assertSee($project->description);
+
+});
+
+test('an authenticated user cannot update the project of the others', function () {
+
+    $project = Project::factory()->create();
+
+    login()->patch($project->path(), [])->assertStatus(403);
+
+});
+
+test('an authenticated user cannot view the project of the others', function () {
+    $project = Project::factory()->create();
+    login()->get($project->path())->assertStatus(403);
+
+});
+
+test('a project requires a title', function () {
     $attributes = Project::factory()->raw(['title' => '']);
-    $this->actingAs($user)->post('/projects', [$attributes])->assertSessionHasErrors('title');
+    login()->post('/projects', [$attributes])->assertSessionHasErrors('title');
 });
 
-it('a project requires a description', function () {
-    $user = User::factory()->create();
+test('a project requires a description', function () {
     $attributes = Project::factory()->raw(['description' => '']);
-    $this->actingAs($user)
-        ->post('/projects', [$attributes])
-        ->assertSessionHasErrors('description');
+    login()->post('/projects', [$attributes])->assertSessionHasErrors('description');
 });

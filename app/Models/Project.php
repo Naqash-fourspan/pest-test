@@ -17,7 +17,8 @@ class Project extends Model
         'uuid',
         'title',
         'description',
-        'owner_id'
+        'owner_id',
+        'notes',
     ];
 
     protected $hidden = [
