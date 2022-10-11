@@ -1,25 +1,26 @@
 <?php
 
+
 use App\Models\User;
+use Illuminate\Support\Str;
+use Illuminate\Testing\Fluent\AssertableJson;
+use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Str;
-use Symfony\Component\HttpFoundation\Response;
 use function Pest\Laravel\postJson;
 
 uses(LazilyRefreshDatabase::class, WithFaker::class);
 
-
 it('registers a user', function () {
 
     $user = User::factory()->raw(['password_confirmation' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi']);
-    $this->json('POST', route('user.register'), $user)
+    postJson(route('user.register'), $user)
         ->assertStatus(Response::HTTP_OK);
 });
 it('registers a user and verified is null', function () {
     $user = User::factory()->raw(['password_confirmation' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi']);
 
-    $this->json('POST',route('user.register'),$user);
+   postJson(route('user.register'),$user);
 
     $this->assertDatabaseHas('users', [
         'email' => $user['email'],
@@ -75,8 +76,36 @@ test('verify unique email on register', function () {
         'email' => $user->email,
     ]);
 
-    $this->postJson(route('user.register'), $newUser)
+    postJson(route('user.register'), $newUser)
         ->assertStatus(Response::HTTP_BAD_REQUEST)
         ->assertJson(['message' => 'The email has already been taken.']);
 
 });
+
+test('it sends user token on correct credentials', function () {
+
+    $user = User::factory()->create();
+
+    postJson(route('user.login'), [
+        'email' => $user->email,
+        'password' => 'password',
+    ])->assertStatus(200)->assertJson(function (AssertableJson $json) use ($user) {
+        $json->has('token')
+            ->where('user_name', $user->name)
+            ->etc();
+    });
+});
+
+test('it validates wrong password', function () {
+    $user = User::factory()->create();
+
+    postJson(route('user.login'), [
+        'email' => $user->email,
+        'password' => 'random',
+    ])->assertStatus(422)->assertJson(function (AssertableJson $json) use ($user) {
+        $json->has('errors')
+            ->where('errors.email.0', __('auth.failed'))
+            ->etc();
+    });
+});
+

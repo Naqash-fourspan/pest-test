@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Api\Auth;
 
 use App\Http\Requests\AbstractFormRequest;
-use Illuminate\Foundation\Http\FormRequest;
 
 class RegisterRequest extends AbstractFormRequest
 {
