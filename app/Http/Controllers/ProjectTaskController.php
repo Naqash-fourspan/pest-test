@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AddTaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Project;
 use App\Models\Task;
+use App\Services\TaskService;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Access\AuthorizationException;
 class ProjectTaskController extends Controller
@@ -14,26 +16,34 @@ class ProjectTaskController extends Controller
      */
     public function store(AddTaskRequest $request)
     {
-        $project = Project::findOrFail($request->project_id);
+        $project = Project::where('uuid', $request->route('project_id'))->first();
         $this->authorize('update', $project);
 
-        $project->addTask($request->body);
+        $project->tasks()->create([
+            'uuid' => $request->uuid,
+            'body' => $request->body,
+        ]);
 
         return redirect($project->path());
     }
 
-    public function update(Request $request)
+
+    public function update(UpdateTaskRequest $request)
     {
-        $project = Project::findOrFail($request->route('project_id'));
+        $project = Project::where('uuid', $request->route('project_id'))->first();
 
         $this->authorize('update', $project);
 
-        request()->validate(['body' => 'required']);
-        $task = Task::findOrFail($request->route('task_id'));
+        $task = Task::where('uuid', $request->route('task_id'))->first();
         $task->update([
             'body' => $request->body,
-            'completed' => $request->completed
         ]);
+
+        if ($request->has('completed') && $request->completed) {
+            (new TaskService())->completeTask($task);
+        } else {
+            (new TaskService())->incompleteTask($task);
+        }
 
         return redirect($project->path());
     }

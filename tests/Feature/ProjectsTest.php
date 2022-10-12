@@ -30,7 +30,7 @@ test('a user can view their project', function () {
     $this->withoutExceptionHandling();
     login();
     $project = Project::factory()->create(['owner_id' => auth()->id()]);
-    $this->get('/project/' . $project->id)->assertSee($project->title)->assertSee($project->description);
+    $this->get('/project/' . $project->uuid)->assertSee($project->title)->assertSee($project->description);
 
 });
 

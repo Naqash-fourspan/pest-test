@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProjectStoreRequest;
+use App\Http\Requests\UpdateProjectRequest;
+use App\Http\Resources\ProjectResource;
 use App\Models\Project;
 use Illuminate\Http\Request;
 
@@ -29,17 +31,16 @@ class ProjectController extends Controller
 
     public function show(Request $request)
     {
-        $project = Project::findOrFail($request->id);
+        $project = Project::where('uuid', '=', $request->id)->first();
         $this->authorize('update', $project);
 
-        return view('projects.show', compact('project'));
+        return view('projects.show', ['project' => ProjectResource::make($project)]);
     }
 
-    public function update(Request $request)
+    public function update(UpdateProjectRequest $request)
     {
-        $project = Project::findOrFail($request->route('project_id'));
+        $project = Project::where('uuid', $request->route('project_id'))->first();
 
-        $this->authorize('update', $project);
         $project->update([
             'notes' => $request->notes
         ]);

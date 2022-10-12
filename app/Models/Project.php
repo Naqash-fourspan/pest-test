@@ -33,7 +33,7 @@ class Project extends Model
     }
     public function path()
     {
-        return "/project/{$this->id}";
+        return "/project/{$this->uuid}";
     }
 
     public function owner(): BelongsTo
@@ -50,5 +50,13 @@ class Project extends Model
     {
         return $this->hasMany(Task::class);
     }
+    public function recordActivity($description)
+    {
+        $this->activity()->create(['description' => $description]);
+    }
 
+    public function activity(): HasMany
+    {
+        return $this->hasMany(Activity::class)->latest();
+    }
 }

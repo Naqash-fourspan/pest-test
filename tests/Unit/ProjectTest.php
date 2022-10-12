@@ -1,10 +1,11 @@
 <?php
 
 use App\Models\Project;
+use Illuminate\Support\Str;
 
 test('it has a path', function () {
     $project = Project::factory()->create();
-    $this->assertEquals('/project/' . $project->id, $project->path());
+    $this->assertEquals('/project/' . $project->uuid, $project->path());
 });
 
 
@@ -15,11 +16,13 @@ test('it belongs to an owner', function () {
 });
 
 
-
 test('it can add a task', function () {
 
     $project = Project::factory()->create();
-    $task =$project->addTask('Test Task from Unit Test');
-    $this->assertCount(1,$project->tasks);
+    $task = $project->tasks()->create([
+        'uuid' => (string)Str::orderedUuid(),
+        'body' => 'Test Task from Unit Test',
+    ]);
+    $this->assertCount(1, $project->tasks);
     $this->assertTrue($project->tasks->contains($task));
 });

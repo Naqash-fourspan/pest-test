@@ -8,19 +8,17 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('tasks', function (Blueprint $table) {
+        Schema::create('activities', function (Blueprint $table) {
             $table->id();
-            $table->uuid();
-            $table->text('body');
             $table->unsignedBigInteger('project_id');
-            $table->boolean('completed')->default(false);
-            $table->foreign('project_id')->references('id')->on('projects')->cascadeOnDelete();
+            $table->string('description');
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('tasks');
+        Schema::dropIfExists('activities');
     }
 };
