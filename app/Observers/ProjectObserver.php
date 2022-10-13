@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Project;
+use App\Services\ProjectService;
 
 class ProjectObserver
 {
@@ -14,7 +15,19 @@ class ProjectObserver
      */
     public function created(Project $project)
     {
-        $project->recordActivity('created');
+        (new ProjectService())->recordActivity($project, 'created');
+    }
+
+    /**
+     * Handle the Project "updating" event.
+     *
+     * @param \App\Models\Project $project
+     * @return void
+     */
+
+    public function updating(Project $project): void
+    {
+        $project->old = $project->getOriginal();
     }
 
     /**
@@ -23,9 +36,9 @@ class ProjectObserver
      * @param \App\Models\Project $project
      * @return void
      */
-    public function updated(Project $project)
+    public function updated(Project $project): void
     {
-        $project->recordActivity('updated');
+        (new ProjectService())->recordActivity($project, 'updated');
     }
 
     /**

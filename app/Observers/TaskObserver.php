@@ -3,24 +3,25 @@
 namespace App\Observers;
 
 use App\Models\Task;
+use App\Services\TaskService;
 
 class TaskObserver
 {
     /**
      * Handle the Task "created" event.
      *
-     * @param  \App\Models\Task  $task
+     * @param \App\Models\Task $task
      * @return void
      */
     public function created(Task $task)
     {
-        $task->project->recordActivity('created_task');
+        (new TaskService())->recordActivity($task, 'created_task');
     }
 
     /**
      * Handle the Task "updated" event.
      *
-     * @param  \App\Models\Task  $task
+     * @param \App\Models\Task $task
      * @return void
      */
     public function updated(Task $task)
@@ -31,18 +32,18 @@ class TaskObserver
     /**
      * Handle the Task "deleted" event.
      *
-     * @param  \App\Models\Task  $task
+     * @param \App\Models\Task $task
      * @return void
      */
     public function deleted(Task $task)
     {
-        $task->project->recordActivity('deleted_task');
+        (new TaskService())->recordActivity($task, 'deleted_task');
     }
 
     /**
      * Handle the Task "restored" event.
      *
-     * @param  \App\Models\Task  $task
+     * @param \App\Models\Task $task
      * @return void
      */
     public function restored(Task $task)
@@ -53,7 +54,7 @@ class TaskObserver
     /**
      * Handle the Task "force deleted" event.
      *
-     * @param  \App\Models\Task  $task
+     * @param \App\Models\Task $task
      * @return void
      */
     public function forceDeleted(Task $task)

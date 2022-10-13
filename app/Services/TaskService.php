@@ -11,13 +11,23 @@ class TaskService
     {
         $task->update(['completed' => true]);
 
-        $task->project->recordActivity('completed_task');
+        $this->recordActivity($task, 'completed_task');
     }
 
     public function incompleteTask(Task $task): void
     {
         $task->update(['completed' => false]);
 
-        $task->project->recordActivity('incompleted_task');
+        $this->recordActivity($task, 'incompleted_task');
+    }
+
+    public function recordActivity(Task $task, $description): void
+    {
+        $task->activity()->create([
+            'user_id' => $task->project->owner->id,
+            'project_id' => $task->project_id,
+            'description' => $description
+        ]);
     }
 }
+

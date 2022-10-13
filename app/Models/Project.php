@@ -26,7 +26,7 @@ class Project extends Model
         'created_at',
         'updated_at'
     ];
-
+    public $old = [];
     public function getRouteKeyName(): string
     {
         return 'uuid';
@@ -50,11 +50,6 @@ class Project extends Model
     {
         return $this->hasMany(Task::class);
     }
-    public function recordActivity($description)
-    {
-        $this->activity()->create(['description' => $description]);
-    }
-
     public function activity(): HasMany
     {
         return $this->hasMany(Activity::class)->latest();
