@@ -47,4 +47,12 @@ class ProjectController extends Controller
 
         return redirect($project->path());
     }
+    public function destroy($id)
+    {
+        $project = Project::where('uuid', $id)->first();
+        $this->authorize('delete', $project);
+        $project->delete();
+
+        return redirect('/projects');
+    }
 }

@@ -49,7 +49,7 @@ class ProjectObserver
      */
     public function deleted(Project $project)
     {
-        //
+        (new ProjectService())->recordActivity($project, 'deleted');
     }
 
     /**

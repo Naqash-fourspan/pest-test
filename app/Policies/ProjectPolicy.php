@@ -14,7 +14,7 @@ class ProjectPolicy
     /**
      * Determine whether the user can view any models.
      *
-     * @param  \App\Models\User  $user
+     * @param \App\Models\User $user
      * @return Response|bool
      */
     public function viewAny(User $user)
@@ -25,8 +25,8 @@ class ProjectPolicy
     /**
      * Determine whether the user can view the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Project  $project
+     * @param \App\Models\User $user
+     * @param \App\Models\Project $project
      * @return Response|bool
      */
     public function view(User $user, Project $project)
@@ -37,7 +37,7 @@ class ProjectPolicy
     /**
      * Determine whether the user can create models.
      *
-     * @param  \App\Models\User  $user
+     * @param \App\Models\User $user
      * @return Response|bool
      */
     public function create(User $user)
@@ -48,8 +48,8 @@ class ProjectPolicy
     /**
      * Determine whether the user can update the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Project  $project
+     * @param \App\Models\User $user
+     * @param \App\Models\Project $project
      * @return Response|bool
      */
     public function update(User $user, Project $project): Response|bool
@@ -60,20 +60,21 @@ class ProjectPolicy
     /**
      * Determine whether the user can delete the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Project  $project
+     * @param \App\Models\User $user
+     * @param \App\Models\Project $project
      * @return Response|bool
      */
     public function delete(User $user, Project $project)
     {
-        //
+        return $user->is($project->owner);
+
     }
 
     /**
      * Determine whether the user can restore the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Project  $project
+     * @param \App\Models\User $user
+     * @param \App\Models\Project $project
      * @return Response|bool
      */
     public function restore(User $user, Project $project)
@@ -84,8 +85,8 @@ class ProjectPolicy
     /**
      * Determine whether the user can permanently delete the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Project  $project
+     * @param \App\Models\User $user
+     * @param \App\Models\Project $project
      * @return Response|bool
      */
     public function forceDelete(User $user, Project $project)

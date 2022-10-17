@@ -2,6 +2,7 @@
 
 use App\Models\Project;
 use App\Models\Task;
+use Illuminate\Support\Str;
 
 test('creating a project records activity', function () {
     $project = Project::factory()->create();

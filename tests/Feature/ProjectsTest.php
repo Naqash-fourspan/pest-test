@@ -57,3 +57,19 @@ test('a project requires a description', function () {
     $attributes = Project::factory()->raw(['description' => '']);
     login()->post('/projects', [$attributes])->assertSessionHasErrors('description');
 });
+test('unauthorized users cannot delete projects', function () {
+    $project = Project::factory()->create();
+    $this->delete($project->path())
+        ->assertRedirect('/login');
+    login();
+    $this->delete($project->path())
+        ->assertStatus(403);
+});
+
+test('a user can delete a project', function () {
+    $project = Project::factory()->create();
+    login($project->owner)
+        ->delete($project->path())
+        ->assertRedirect('/projects');
+    $this->assertDatabaseMissing('projects', $project->only('id'));
+});
